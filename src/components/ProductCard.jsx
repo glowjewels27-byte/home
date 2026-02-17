@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function ProductCard({ product }) {
   const discountPct = product.discount || 0;
+  const displayDiscountPct = Math.round(discountPct);
   const price = Math.round(product.price * (1 - discountPct / 100));
   return (
     <Link to={`/product/${product._id}`} className="group">
@@ -9,11 +10,11 @@ export default function ProductCard({ product }) {
         <img
           src={product.images?.[0]}
           alt={product.name}
-          className="h-64 w-full object-cover group-hover:scale-105 transition"
+          className="h-72 w-full object-cover group-hover:scale-105 transition"
         />
-        {discountPct > 0 && (
+        {displayDiscountPct > 0 && (
           <span className="absolute top-4 left-4 bg-blush text-xs px-3 py-1 rounded-full">
-            {discountPct}% off
+            {displayDiscountPct}% off
           </span>
         )}
       </div>
