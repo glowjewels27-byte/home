@@ -68,12 +68,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="max-w-6xl mx-auto px-6 py-2">
-        <div className="bg-white border border-black/10 rounded-2xl p-4 text-sm text-charcoal/80">
-          Return Policy: 7-day replacement for damaged or wrong items.
-        </div>
-      </section>
-
       <section className="max-w-6xl mx-auto px-6 py-10">
         <SectionHeader
           label="Featured"
