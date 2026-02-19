@@ -50,7 +50,7 @@ export default function Checkout() {
     }
     if (!/^\d{10}$/.test(address.phone.trim())) return "Phone must be 10 digits";
     if (!/^\d{6}$/.test(address.postalCode.trim())) return "Postal code must be 6 digits";
-    if (!totals.isMinOrderMet) return "Minimum order amount is ₹500";
+    if (!totals.isMinOrderMet) return "Minimum order amount is ₹400";
     return null;
   };
 
@@ -187,7 +187,7 @@ export default function Checkout() {
             <span>₹{totals.grandTotal}</span>
           </div>
         </div>
-        {!totals.isMinOrderMet && <p className="mt-3 text-xs text-red-500">Minimum order amount is ₹500.</p>}
+        {!totals.isMinOrderMet && <p className="mt-3 text-xs text-red-500">Minimum order amount is ₹400.</p>}
         <button
           onClick={placeOrder}
           disabled={placing || !totals.isMinOrderMet}
