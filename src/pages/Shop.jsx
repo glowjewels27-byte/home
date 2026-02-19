@@ -11,6 +11,7 @@ export default function Shop() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [filters, setFilters] = useState({ category: "", type: "", sort: "newest", minPrice: "", maxPrice: "", q: "" });
 
   const loadProducts = async () => {
@@ -34,6 +35,8 @@ export default function Shop() {
     return products.slice(start, start + PAGE_SIZE);
   }, [products, page]);
 
+  const activeFilterCount = [filters.category, filters.type, filters.minPrice, filters.maxPrice].filter(Boolean).length;
+
   return (
     <div className="max-w-6xl mx-auto px-6 py-12">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -45,7 +48,7 @@ export default function Shop() {
         <div className="flex flex-wrap gap-3">
           <input
             placeholder="Search products"
-            className="border border-black/10 rounded-full px-4 py-2 text-sm"
+            className="border border-black/10 rounded-full px-4 py-2 text-sm w-full md:w-auto"
             value={filters.q}
             onChange={(e) => setFilters((prev) => ({ ...prev, q: e.target.value }))}
           />
@@ -58,11 +61,78 @@ export default function Shop() {
             <option value="price_asc">Price: Low to High</option>
             <option value="price_desc">Price: High to Low</option>
           </select>
+          <button
+            onClick={() => setShowMobileFilters((v) => !v)}
+            className="md:hidden border border-black/10 rounded-full px-4 py-2 text-sm"
+          >
+            Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
+          </button>
         </div>
       </div>
 
+      {showMobileFilters && (
+        <div className="md:hidden mt-6 glass rounded-2xl p-5 space-y-4 animate-fade">
+          <div className="grid grid-cols-2 gap-3">
+            <select
+              className="w-full border border-black/10 rounded-lg px-3 py-2 text-sm bg-white"
+              value={filters.category}
+              onChange={(e) => setFilters((prev) => ({ ...prev, category: e.target.value }))}
+            >
+              <option value="">All Categories</option>
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+            <select
+              className="w-full border border-black/10 rounded-lg px-3 py-2 text-sm bg-white"
+              value={filters.type}
+              onChange={(e) => setFilters((prev) => ({ ...prev, type: e.target.value }))}
+            >
+              <option value="">All Occasions</option>
+              {occasions.map((occ) => (
+                <option key={occ} value={occ}>
+                  {occ}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <input
+              type="number"
+              placeholder="Min price"
+              className="w-full border border-black/10 rounded-lg px-3 py-2 text-sm"
+              value={filters.minPrice}
+              onChange={(e) => setFilters((prev) => ({ ...prev, minPrice: e.target.value }))}
+            />
+            <input
+              type="number"
+              placeholder="Max price"
+              className="w-full border border-black/10 rounded-lg px-3 py-2 text-sm"
+              value={filters.maxPrice}
+              onChange={(e) => setFilters((prev) => ({ ...prev, maxPrice: e.target.value }))}
+            />
+          </div>
+          <div className="flex justify-between items-center">
+            <button
+              onClick={() => setFilters((prev) => ({ ...prev, category: "", type: "", minPrice: "", maxPrice: "" }))}
+              className="text-xs uppercase tracking-[0.2em]"
+            >
+              Clear Filters
+            </button>
+            <button
+              onClick={() => setShowMobileFilters(false)}
+              className="px-4 py-2 rounded-full bg-charcoal text-ivory text-xs uppercase tracking-[0.2em]"
+            >
+              Done
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="grid md:grid-cols-[280px_1fr] gap-8 mt-10">
-        <div className="space-y-6">
+        <div className="space-y-6 hidden md:block">
           <div className="glass p-5 rounded-2xl">
             <h3 className="font-serif text-lg">Category</h3>
             <div className="mt-4 space-y-2">
@@ -135,7 +205,7 @@ export default function Shop() {
             <p>{products.length} products found</p>
             <p>Page {page} of {totalPages}</p>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
             {loading
               ? Array.from({ length: 6 }).map((_, idx) => <SkeletonCard key={idx} />)
               : pagedProducts.map((product) => <ProductCard key={product._id} product={product} />)}

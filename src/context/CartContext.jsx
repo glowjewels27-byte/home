@@ -46,7 +46,7 @@ export const CartProvider = ({ children }) => {
     const total = subtotal - discount;
     const shipping = total >= FREE_SHIPPING_THRESHOLD || total === 0 ? 0 : SHIPPING_CHARGE;
     const grandTotal = total + shipping;
-    const isMinOrderMet = total >= MIN_ORDER_AMOUNT;
+    const isMinOrderMet = grandTotal >= MIN_ORDER_AMOUNT;
     return { subtotal, discount, total, shipping, grandTotal, isMinOrderMet };
   }, [items]);
 

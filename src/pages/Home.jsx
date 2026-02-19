@@ -44,7 +44,7 @@ export default function Home() {
         </div>
         <div className="glass rounded-2xl p-6 shadow-glow">
           <img
-            src="https://images.unsplash.com/photo-1518544801976-3e159e50e5bb?auto=format&fit=crop&w=1200&q=80"
+            src="/hero-gemini.png"
             alt="Glow Jewels hero"
             className="rounded-2xl h-[420px] w-full object-cover"
           />
@@ -97,7 +97,7 @@ export default function Home() {
       </section>
 
       <section className="max-w-6xl mx-auto px-6 py-12">
-        <SectionHeader label="Instagram" title="Glow in Every Frame" subtitle="Tag @glowjewels to get featured." />
+        <SectionHeader label="Instagram" title="Glow in Every Frame" subtitle="Tag @glowjewels.shop to get featured." />
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {instaGrid.map((src, idx) => (
             <img key={idx} src={src} alt="Glow Jewels" className="rounded-2xl object-cover h-48 w-full" />

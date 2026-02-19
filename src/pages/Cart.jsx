@@ -64,7 +64,7 @@ export default function Cart() {
           </div>
         </div>
 
-        {totals.total < 500 && <p className="mt-4 text-xs text-red-500">Minimum order amount is ₹500 (before shipping).</p>}
+        {!totals.isMinOrderMet && <p className="mt-4 text-xs text-red-500">Minimum order amount is ₹500.</p>}
         {totals.total < 1500 && <p className="mt-2 text-xs text-charcoal/70">Add ₹{1500 - totals.total} more for free delivery.</p>}
 
         <Link

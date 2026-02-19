@@ -21,7 +21,6 @@ export default function Checkout() {
   const { items, totals, clearCart } = useCart();
   const { showToast } = useToast();
   const navigate = useNavigate();
-  const [paymentMethod, setPaymentMethod] = useState("cod");
   const [address, setAddress] = useState({
     fullName: "",
     line1: "",
@@ -57,15 +56,6 @@ export default function Checkout() {
 
   const productsPayload = items.map((item) => ({ product: item._id, qty: item.qty }));
 
-  const placeCodOrder = async () => {
-    const { data } = await api.post("/orders", {
-      products: productsPayload,
-      paymentMethod: "cod",
-      shippingAddress: address
-    });
-    return data;
-  };
-
   const placeRazorpayOrder = async () => {
     const { data: paymentInit } = await api.post("/payments/create", {
       products: productsPayload,
@@ -95,7 +85,10 @@ export default function Checkout() {
         },
         theme: { color: "#1E1E1E" },
         modal: {
-          ondismiss: () => reject(new Error("Payment popup closed"))
+          ondismiss: async () => {
+            await api.delete(`/payments/cancel/${paymentInit.localOrderId}`);
+            reject(new Error("Payment cancelled. Order not placed."));
+          }
         },
         handler: async (response) => {
           try {
@@ -112,7 +105,10 @@ export default function Checkout() {
         }
       });
 
-      razorpay.on("payment.failed", () => reject(new Error("Payment failed")));
+      razorpay.on("payment.failed", async () => {
+        await api.delete(`/payments/cancel/${paymentInit.localOrderId}`);
+        reject(new Error("Payment failed. Order not placed."));
+      });
       razorpay.open();
     });
   };
@@ -128,9 +124,7 @@ export default function Checkout() {
 
     setPlacing(true);
     try {
-      let order;
-      if (paymentMethod === "cod") order = await placeCodOrder();
-      if (paymentMethod === "razorpay") order = await placeRazorpayOrder();
+      const order = await placeRazorpayOrder();
 
       clearCart();
       showToast("Order placed successfully");
@@ -171,16 +165,7 @@ export default function Checkout() {
 
         <div className="glass rounded-2xl p-6">
           <h2 className="font-serif text-2xl">Payment</h2>
-          <div className="mt-4 space-y-3 text-sm">
-            <label className="flex items-center gap-3">
-              <input type="radio" checked={paymentMethod === "cod"} onChange={() => setPaymentMethod("cod")} />
-              Cash on Delivery
-            </label>
-            <label className="flex items-center gap-3">
-              <input type="radio" checked={paymentMethod === "razorpay"} onChange={() => setPaymentMethod("razorpay")} />
-              Razorpay (UPI / Cards)
-            </label>
-          </div>
+          <p className="mt-4 text-sm">Razorpay (UPI / Cards)</p>
         </div>
       </div>
 

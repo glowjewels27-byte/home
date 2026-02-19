@@ -19,8 +19,8 @@ export default function Contact() {
           <h1 className="font-serif text-4xl mt-2">Let’s talk glow</h1>
           <p className="text-charcoal/70 mt-4">Have a question or need styling help? We’re here for you.</p>
           <div className="mt-6 space-y-2 text-sm">
-            <p>hello@glowjewels.in</p>
-            <p>Instagram: @glowjewels</p>
+            <p>glowjewels27@gmail.com</p>
+            <p>Instagram: @glowjewels.shop</p>
           </div>
         </div>
         <form onSubmit={submit} className="glass rounded-2xl p-6 space-y-4">
