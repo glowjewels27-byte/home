@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthContext.jsx";
 import { useCart } from "../context/CartContext.jsx";
 import { useToast } from "../context/ToastContext.jsx";
 import api from "../utils/api.js";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const loadRazorpayScript = () => {
   return new Promise((resolve) => {
@@ -20,6 +20,7 @@ export default function Checkout() {
   const { user } = useAuth();
   const { items, totals, clearCart } = useCart();
   const { showToast } = useToast();
+  const navigate = useNavigate();
   const [paymentMethod, setPaymentMethod] = useState("cod");
   const [address, setAddress] = useState({
     fullName: "",
@@ -43,14 +44,26 @@ export default function Checkout() {
     );
   }
 
+  const validateCheckout = () => {
+    const required = ["fullName", "line1", "city", "state", "postalCode", "phone"];
+    for (const key of required) {
+      if (!address[key]?.trim()) return `Please enter ${key}`;
+    }
+    if (!/^\d{10}$/.test(address.phone.trim())) return "Phone must be 10 digits";
+    if (!/^\d{6}$/.test(address.postalCode.trim())) return "Postal code must be 6 digits";
+    if (!totals.isMinOrderMet) return "Minimum order amount is ₹500";
+    return null;
+  };
+
   const productsPayload = items.map((item) => ({ product: item._id, qty: item.qty }));
 
   const placeCodOrder = async () => {
-    await api.post("/orders", {
+    const { data } = await api.post("/orders", {
       products: productsPayload,
       paymentMethod: "cod",
       shippingAddress: address
     });
+    return data;
   };
 
   const placeRazorpayOrder = async () => {
@@ -60,14 +73,14 @@ export default function Checkout() {
     });
 
     if (paymentInit.provider === "mock") {
-      await api.post("/payments/verify", { localOrderId: paymentInit.localOrderId, provider: "mock" });
-      return;
+      const { data } = await api.post("/payments/verify", { localOrderId: paymentInit.localOrderId, provider: "mock" });
+      return data.order;
     }
 
     const loaded = await loadRazorpayScript();
     if (!loaded) throw new Error("Razorpay SDK failed to load");
 
-    await new Promise((resolve, reject) => {
+    return await new Promise((resolve, reject) => {
       const razorpay = new window.Razorpay({
         key: paymentInit.keyId,
         amount: paymentInit.amount,
@@ -86,13 +99,13 @@ export default function Checkout() {
         },
         handler: async (response) => {
           try {
-            await api.post("/payments/verify", {
+            const { data } = await api.post("/payments/verify", {
               localOrderId: paymentInit.localOrderId,
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature
             });
-            resolve(true);
+            resolve(data.order);
           } catch (err) {
             reject(err);
           }
@@ -107,13 +120,22 @@ export default function Checkout() {
   const placeOrder = async () => {
     if (!items.length) return;
 
+    const validationError = validateCheckout();
+    if (validationError) {
+      showToast(validationError, "error");
+      return;
+    }
+
     setPlacing(true);
     try {
-      if (paymentMethod === "cod") await placeCodOrder();
-      if (paymentMethod === "razorpay") await placeRazorpayOrder();
+      let order;
+      if (paymentMethod === "cod") order = await placeCodOrder();
+      if (paymentMethod === "razorpay") order = await placeRazorpayOrder();
 
       clearCart();
       showToast("Order placed successfully");
+      if (order?._id) navigate(`/order-success/${order._id}`);
+      else navigate("/account");
     } catch (err) {
       showToast(err?.response?.data?.message || err.message || "Checkout failed", "error");
     } finally {
@@ -171,14 +193,19 @@ export default function Checkout() {
               <span>₹{Math.round(item.price * (1 - (item.discount || 0) / 100)) * item.qty}</span>
             </div>
           ))}
+          <div className="flex justify-between mt-2">
+            <span>Shipping</span>
+            <span>{totals.shipping === 0 ? "Free" : `₹${totals.shipping}`}</span>
+          </div>
           <div className="flex justify-between font-medium text-lg mt-4">
             <span>Total</span>
-            <span>₹{totals.total}</span>
+            <span>₹{totals.grandTotal}</span>
           </div>
         </div>
+        {!totals.isMinOrderMet && <p className="mt-3 text-xs text-red-500">Minimum order amount is ₹500.</p>}
         <button
           onClick={placeOrder}
-          disabled={placing}
+          disabled={placing || !totals.isMinOrderMet}
           className="mt-6 w-full px-6 py-3 rounded-full bg-charcoal text-ivory text-sm uppercase tracking-[0.2em] disabled:opacity-60"
         >
           {placing ? "Placing..." : "Place Order"}

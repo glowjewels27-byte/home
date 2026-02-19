@@ -54,14 +54,27 @@ export default function Cart() {
             <span>Discount</span>
             <span>-₹{totals.discount}</span>
           </div>
+          <div className="flex justify-between">
+            <span>Shipping</span>
+            <span>{totals.shipping === 0 ? "Free" : `₹${totals.shipping}`}</span>
+          </div>
           <div className="flex justify-between font-medium text-lg">
             <span>Total</span>
-            <span>₹{totals.total}</span>
+            <span>₹{totals.grandTotal}</span>
           </div>
         </div>
+
+        {totals.total < 500 && <p className="mt-4 text-xs text-red-500">Minimum order amount is ₹500 (before shipping).</p>}
+        {totals.total < 1500 && <p className="mt-2 text-xs text-charcoal/70">Add ₹{1500 - totals.total} more for free delivery.</p>}
+
         <Link
-          to="/checkout"
-          className="mt-6 block text-center px-6 py-3 rounded-full bg-charcoal text-ivory text-sm uppercase tracking-[0.2em]"
+          to={totals.isMinOrderMet ? "/checkout" : "#"}
+          onClick={(e) => {
+            if (!totals.isMinOrderMet) e.preventDefault();
+          }}
+          className={`mt-6 block text-center px-6 py-3 rounded-full text-sm uppercase tracking-[0.2em] ${
+            totals.isMinOrderMet ? "bg-charcoal text-ivory" : "bg-charcoal/40 text-ivory/70 pointer-events-none"
+          }`}
         >
           Checkout
         </Link>

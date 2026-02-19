@@ -1,6 +1,9 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 const CartContext = createContext();
+const SHIPPING_CHARGE = 50;
+const FREE_SHIPPING_THRESHOLD = 1500;
+const MIN_ORDER_AMOUNT = 500;
 
 export const CartProvider = ({ children }) => {
   const [items, setItems] = useState([]);
@@ -25,7 +28,7 @@ export const CartProvider = ({ children }) => {
   };
 
   const updateQty = (id, qty) => {
-    setItems((prev) => prev.map((p) => (p._id === id ? { ...p, qty } : p)));
+    setItems((prev) => prev.map((p) => (p._id === id ? { ...p, qty: Math.max(1, Number(qty) || 1) } : p)));
   };
 
   const removeItem = (id) => {
@@ -41,7 +44,10 @@ export const CartProvider = ({ children }) => {
       return acc + Math.round(item.price * (pct / 100)) * item.qty;
     }, 0);
     const total = subtotal - discount;
-    return { subtotal, discount, total };
+    const shipping = total >= FREE_SHIPPING_THRESHOLD || total === 0 ? 0 : SHIPPING_CHARGE;
+    const grandTotal = total + shipping;
+    const isMinOrderMet = total >= MIN_ORDER_AMOUNT;
+    return { subtotal, discount, total, shipping, grandTotal, isMinOrderMet };
   }, [items]);
 
   return (

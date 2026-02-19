@@ -1,21 +1,24 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import api from "../utils/api.js";
 import ProductCard from "../components/ProductCard.jsx";
 import SkeletonCard from "../components/SkeletonCard.jsx";
 
 const categories = ["Necklaces", "Earrings", "Rings", "Bracelets", "Anklets", "Combos"];
 const occasions = ["Party", "Festive", "Daily"];
+const PAGE_SIZE = 9;
 
 export default function Shop() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState({ category: "", type: "", sort: "newest", minPrice: "", maxPrice: "" });
+  const [page, setPage] = useState(1);
+  const [filters, setFilters] = useState({ category: "", type: "", sort: "newest", minPrice: "", maxPrice: "", q: "" });
 
   const loadProducts = async () => {
     setLoading(true);
     try {
       const { data } = await api.get("/products", { params: filters });
-      setProducts(data);
+      setProducts(data || []);
+      setPage(1);
     } finally {
       setLoading(false);
     }
@@ -25,15 +28,27 @@ export default function Shop() {
     loadProducts();
   }, [filters]);
 
+  const totalPages = Math.max(1, Math.ceil(products.length / PAGE_SIZE));
+  const pagedProducts = useMemo(() => {
+    const start = (page - 1) * PAGE_SIZE;
+    return products.slice(start, start + PAGE_SIZE);
+  }, [products, page]);
+
   return (
     <div className="max-w-6xl mx-auto px-6 py-12">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
           <p className="text-xs uppercase tracking-[0.4em]">Shop</p>
           <h1 className="font-serif text-4xl mt-2">All Jewellery</h1>
-          <p className="text-charcoal/70 mt-3">Filters that fit your vibe — from daily shine to festive glam.</p>
+          <p className="text-charcoal/70 mt-3">Find your style faster with search, filters, and curated sorting.</p>
         </div>
         <div className="flex flex-wrap gap-3">
+          <input
+            placeholder="Search products"
+            className="border border-black/10 rounded-full px-4 py-2 text-sm"
+            value={filters.q}
+            onChange={(e) => setFilters((prev) => ({ ...prev, q: e.target.value }))}
+          />
           <select
             className="border border-black/10 rounded-full px-4 py-2 text-sm"
             value={filters.sort}
@@ -115,10 +130,35 @@ export default function Shop() {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {loading
-            ? Array.from({ length: 6 }).map((_, idx) => <SkeletonCard key={idx} />)
-            : products.map((product) => <ProductCard key={product._id} product={product} />)}
+        <div>
+          <div className="flex items-center justify-between mb-6 text-sm text-charcoal/70">
+            <p>{products.length} products found</p>
+            <p>Page {page} of {totalPages}</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {loading
+              ? Array.from({ length: 6 }).map((_, idx) => <SkeletonCard key={idx} />)
+              : pagedProducts.map((product) => <ProductCard key={product._id} product={product} />)}
+          </div>
+
+          {!loading && totalPages > 1 && (
+            <div className="flex items-center justify-center gap-3 mt-8">
+              <button
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1}
+                className="px-4 py-2 rounded-full border border-black/10 text-sm disabled:opacity-40"
+              >
+                Prev
+              </button>
+              <button
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+                className="px-4 py-2 rounded-full border border-black/10 text-sm disabled:opacity-40"
+              >
+                Next
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
