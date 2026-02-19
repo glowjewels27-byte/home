@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 const CartContext = createContext();
 const SHIPPING_CHARGE = 50;
-const FREE_SHIPPING_THRESHOLD = 1500;
+const FREE_SHIPPING_THRESHOLD = 1000;
 const MIN_ORDER_AMOUNT = 400;
 
 export const CartProvider = ({ children }) => {

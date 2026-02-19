@@ -108,9 +108,9 @@ export default function ProductDetail() {
           </div>
 
           <div className="grid grid-cols-1 gap-3 text-sm">
-            <div className="bg-white rounded-xl p-4 border border-black/5">Free delivery above ₹1500</div>
-            <div className="bg-white rounded-xl p-4 border border-black/5">Easy 7-day returns for damaged items</div>
-            <div className="bg-white rounded-xl p-4 border border-black/5">Secure checkout with UPI, cards and COD</div>
+            <div className="bg-white rounded-xl p-4 border border-black/5">Free delivery above ₹1000</div>
+            <div className="bg-white rounded-xl p-4 border border-black/5">7-day return policy for damaged or wrong item delivery</div>
+            <div className="bg-white rounded-xl p-4 border border-black/5">Secure checkout with UPI and cards via Razorpay</div>
           </div>
         </div>
       </div>

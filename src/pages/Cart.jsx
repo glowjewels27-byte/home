@@ -65,7 +65,7 @@ export default function Cart() {
         </div>
 
         {!totals.isMinOrderMet && <p className="mt-4 text-xs text-red-500">Minimum order amount is ₹400.</p>}
-        {totals.total < 1500 && <p className="mt-2 text-xs text-charcoal/70">Add ₹{1500 - totals.total} more for free delivery.</p>}
+        {totals.total < 1000 && <p className="mt-2 text-xs text-charcoal/70">Add ₹{1000 - totals.total} more for free delivery.</p>}
 
         <Link
           to={totals.isMinOrderMet ? "/checkout" : "#"}

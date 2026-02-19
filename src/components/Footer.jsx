@@ -21,6 +21,7 @@ export default function Footer() {
           <h4 className="uppercase tracking-[0.2em] text-xs mb-3">Get in touch</h4>
           <p className="text-charcoal/70">glowjewels27@gmail.com</p>
           <p className="text-charcoal/70">Instagram: @glowjewels.shop</p>
+          <p className="text-charcoal/70 mt-2">Return policy: 7-day replacement for damaged/wrong items.</p>
         </div>
       </div>
     </footer>

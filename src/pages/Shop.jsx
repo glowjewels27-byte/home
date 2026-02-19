@@ -2,12 +2,14 @@ import { useEffect, useMemo, useState } from "react";
 import api from "../utils/api.js";
 import ProductCard from "../components/ProductCard.jsx";
 import SkeletonCard from "../components/SkeletonCard.jsx";
+import { useSearchParams } from "react-router-dom";
 
 const categories = ["Necklaces", "Earrings", "Rings", "Bracelets", "Anklets", "Combos"];
 const occasions = ["Party", "Festive", "Daily"];
 const PAGE_SIZE = 9;
 
 export default function Shop() {
+  const [searchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -28,6 +30,14 @@ export default function Shop() {
   useEffect(() => {
     loadProducts();
   }, [filters]);
+
+  useEffect(() => {
+    const category = searchParams.get("category") || "";
+    const type = searchParams.get("type") || "";
+    const q = searchParams.get("q") || "";
+    setFilters((prev) => ({ ...prev, category, type, q }));
+    setPage(1);
+  }, [searchParams]);
 
   const totalPages = Math.max(1, Math.ceil(products.length / PAGE_SIZE));
   const pagedProducts = useMemo(() => {

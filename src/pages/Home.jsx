@@ -6,6 +6,8 @@ import SkeletonCard from "../components/SkeletonCard.jsx";
 import { banners, instaGrid, testimonials } from "../data/homeData.js";
 import { Link } from "react-router-dom";
 
+const homeCategories = ["Necklaces", "Earrings", "Rings", "Bracelets", "Anklets", "Combos"];
+
 export default function Home() {
   const [featured, setFeatured] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -48,6 +50,27 @@ export default function Home() {
             alt="Glow Jewels hero"
             className="rounded-2xl h-[420px] w-full object-cover"
           />
+        </div>
+      </section>
+
+      <section className="max-w-6xl mx-auto px-6 pb-2 md:hidden">
+        <p className="text-xs uppercase tracking-[0.35em] text-charcoal/60 mb-3">Shop by Category</p>
+        <div className="flex gap-3 overflow-x-auto pb-3">
+          {homeCategories.map((cat) => (
+            <Link
+              key={cat}
+              to={`/shop?category=${encodeURIComponent(cat)}`}
+              className="shrink-0 px-4 py-2 rounded-full bg-white border border-black/10 text-sm"
+            >
+              {cat}
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="max-w-6xl mx-auto px-6 py-2">
+        <div className="bg-white border border-black/10 rounded-2xl p-4 text-sm text-charcoal/80">
+          Return Policy: 7-day replacement for damaged or wrong items.
         </div>
       </section>
 
