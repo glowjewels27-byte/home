@@ -14,6 +14,7 @@ import OrderSuccess from "./pages/OrderSuccess.jsx";
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 import ScrollToTop from "./components/ScrollToTop.jsx";
+import { Analytics } from "@vercel/analytics/next";
 
 export default function App() {
   return (
