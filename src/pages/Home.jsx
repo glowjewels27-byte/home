@@ -3,10 +3,10 @@ import api from "../utils/api.js";
 import ProductCard from "../components/ProductCard.jsx";
 import SectionHeader from "../components/SectionHeader.jsx";
 import SkeletonCard from "../components/SkeletonCard.jsx";
-import { banners, instaGrid, testimonials } from "../data/homeData.js";
+import { banners, productTypes, testimonials } from "../data/homeData.js";
 import { Link } from "react-router-dom";
 
-const homeCategories = ["Necklaces", "Earrings", "Rings", "Bracelets", "Anklets", "Combos"];
+const homeCategories = ["Necklaces", "Earrings", "Rings", "Bracelets", "Anklets", "Purse"];
 
 export default function Home() {
   const [featured, setFeatured] = useState([]);
@@ -70,14 +70,43 @@ export default function Home() {
 
       <section className="max-w-6xl mx-auto px-6 py-10">
         <SectionHeader
-          label="Featured"
-          title="New Season Icons"
-          subtitle="Curated for the Glow Jewels girl: delicate, confident, and modern."
+          label="Shop by Type"
+          title="Signature Jewellery Categories"
+          subtitle="Browse the Glow Jewels universe by silhouette, from everyday stacks to statement shine."
         />
-        <div className="grid md:grid-cols-3 gap-8">
-          {loading
-            ? Array.from({ length: 3 }).map((_, idx) => <SkeletonCard key={idx} />)
-            : featured.map((product) => <ProductCard key={product._id} product={product} />)}
+        <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+          {productTypes.slice(0, 6).map((item) => (
+            <Link
+              key={item.title}
+              to={item.href || `/shop?category=${encodeURIComponent(item.title)}`}
+              className="group relative overflow-hidden rounded-[28px] border border-white/60 bg-white/80 shadow-glass transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(39,31,31,0.12)]"
+            >
+              <div className={`absolute inset-0 bg-gradient-to-br ${item.accent} opacity-18 transition duration-300 group-hover:opacity-12`} />
+              <div className="relative aspect-[4/4.6] overflow-hidden">
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="absolute inset-0 h-full w-full scale-[1.03] object-cover blur-[2px] brightness-[0.92] saturate-[1.02] transition duration-500 group-hover:scale-[1.06] group-hover:blur-[0.5px]"
+                />
+                <div className="absolute inset-0 z-10 bg-gradient-to-t from-charcoal/28 via-charcoal/6 to-white/3 transition duration-300 group-hover:from-charcoal/34" />
+                <div className="absolute inset-0 z-20 flex flex-col justify-between p-6">
+                  <div>
+                    <span className="inline-flex rounded-full border border-white/45 bg-white/18 px-4 py-2 text-[11px] uppercase tracking-[0.28em] text-white backdrop-blur-md">
+                      {item.title}
+                    </span>
+                  </div>
+                  <div className="flex items-end justify-between gap-4">
+                    <h3 className="font-serif text-4xl text-white drop-shadow-[0_10px_24px_rgba(0,0,0,0.22)]">
+                      {item.title}
+                    </h3>
+                    <span className="translate-y-3 rounded-full border border-white/45 bg-white/16 px-4 py-2 text-xs uppercase tracking-[0.24em] text-white opacity-0 backdrop-blur-md transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                      Explore
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          ))}
         </div>
       </section>
 
@@ -109,15 +138,6 @@ export default function Home() {
               <p className="text-charcoal/70">“{item.quote}”</p>
               <p className="mt-4 font-medium">{item.name}</p>
             </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="max-w-6xl mx-auto px-6 py-12">
-        <SectionHeader label="Instagram" title="Glow in Every Frame" subtitle="Tag @glowjewels.shop to get featured." />
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {instaGrid.map((src, idx) => (
-            <img key={idx} src={src} alt="Glow Jewels" className="rounded-2xl object-cover h-48 w-full" />
           ))}
         </div>
       </section>

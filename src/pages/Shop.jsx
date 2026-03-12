@@ -4,7 +4,7 @@ import ProductCard from "../components/ProductCard.jsx";
 import SkeletonCard from "../components/SkeletonCard.jsx";
 import { useSearchParams } from "react-router-dom";
 
-const categories = ["Necklaces", "Earrings", "Rings", "Bracelets", "Anklets", "Combos"];
+const categories = ["Necklaces", "Earrings", "Rings", "Bracelets", "Anklets", "Combos", "Purse"];
 const occasions = ["Party", "Festive", "Daily"];
 const PAGE_SIZE = 9;
 

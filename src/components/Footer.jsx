@@ -15,6 +15,8 @@ export default function Footer() {
             <li>Earrings</li>
             <li>Rings</li>
             <li>Bracelets</li>
+            <li>Anklets</li>
+            <li>Purse</li>
           </ul>
         </div>
         <div>

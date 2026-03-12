@@ -19,6 +19,51 @@ export const banners = [
   }
 ];
 
+export const productTypes = [
+  {
+    title: "Necklaces",
+    subtitle: "Layered chains, soft kundan tones, and statement collars.",
+    image: "/necklace.png",
+    accent: "from-champagne/70 via-ivory to-blush/40",
+    href: "/shop?category=Necklaces"
+  },
+  {
+    title: "Earrings",
+    subtitle: "Drops, studs, and party pairs that frame every look.",
+    image: "/earing.png",
+    accent: "from-blush/60 via-ivory to-champagne/30",
+    href: "/shop?category=Earrings"
+  },
+  {
+    title: "Rings",
+    subtitle: "Minimal stacks and sculpted pieces with a polished finish.",
+    image: "/ring.png",
+    accent: "from-ivory via-blush/35 to-champagne/40",
+    href: "/shop?category=Rings"
+  },
+  {
+    title: "Bracelets",
+    subtitle: "Delicate chains and charm silhouettes for daily styling.",
+    image: "/bracelet.png",
+    accent: "from-champagne/50 via-ivory to-blush/30",
+    href: "/shop?category=Bracelets"
+  },
+  {
+    title: "Anklets",
+    subtitle: "Subtle sparkle made for festive fits and easy summer looks.",
+    image: "/anklet.png",
+    accent: "from-blush/55 via-ivory to-champagne/25",
+    href: "/shop?category=Anklets"
+  },
+  {
+    title: "Purse",
+    subtitle: "Compact glam pieces that pair cleanly with festive dressing.",
+    image: "/purse.png",
+    accent: "from-ivory via-champagne/35 to-blush/35",
+    href: "/shop?q=purse"
+  }
+];
+
 export const testimonials = [
   {
     name: "Meera S.",
