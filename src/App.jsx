@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import Shop from "./pages/Shop.jsx";
 import ProductDetail from "./pages/ProductDetail.jsx";
@@ -15,12 +15,16 @@ import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 import ScrollToTop from "./components/ScrollToTop.jsx";
 import { Analytics } from "@vercel/analytics/react";
+import RingExperience from "./pages/RingExperience.jsx";
 
 export default function App() {
+  const location = useLocation();
+  const isRingPage = location.pathname.startsWith("/ring/");
+
   return (
     <div className="min-h-screen font-sans">
       <ScrollToTop />
-      <Navbar />
+      {!isRingPage && <Navbar />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/shop" element={<Shop />} />
@@ -34,8 +38,9 @@ export default function App() {
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/ring/:slug" element={<RingExperience />} />
       </Routes>
-      <Footer />
+      {!isRingPage && <Footer />}
       <Analytics />
     </div>
   );
