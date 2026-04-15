@@ -9,7 +9,6 @@ export default function RingExperience() {
   const [experience, setExperience] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [needsInteraction, setNeedsInteraction] = useState(false);
   const [playing, setPlaying] = useState(false);
 
   const title = useMemo(() => {
@@ -31,10 +30,8 @@ export default function RingExperience() {
       audioRef.current.currentTime = 0;
       await audioRef.current.play();
       setPlaying(true);
-      setNeedsInteraction(false);
     } catch (err) {
       setPlaying(false);
-      setNeedsInteraction(true);
     }
   };
 
@@ -74,10 +71,19 @@ export default function RingExperience() {
     audio.addEventListener("pause", onPause);
     playAudio();
 
+    const unlockAudio = () => {
+      playAudio();
+    };
+
+    window.addEventListener("touchstart", unlockAudio, { passive: true });
+    window.addEventListener("click", unlockAudio);
+
     return () => {
       clearReplayTimer();
       audio.removeEventListener("ended", onEnded);
       audio.removeEventListener("pause", onPause);
+      window.removeEventListener("touchstart", unlockAudio);
+      window.removeEventListener("click", unlockAudio);
       audio.pause();
     };
   }, [experience]);
@@ -109,10 +115,10 @@ export default function RingExperience() {
     <div className="min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top,#f8d9e5_0%,#fdf0f3_32%,#fffaf7_72%,#ffffff_100%)] px-5 py-6 text-charcoal">
       <audio ref={audioRef} src={experience.audioDataUrl} preload="auto" />
 
-      <div className="mx-auto flex min-h-[calc(100vh-3rem)] max-w-md flex-col justify-between">
-        <div className="rounded-[30px] border border-white/80 bg-white/55 p-5 shadow-[0_20px_70px_rgba(228,181,197,0.16)] backdrop-blur-xl">
+      <div className="mx-auto flex min-h-[calc(100vh-3rem)] max-w-md flex-col justify-center">
+        <div className="rounded-[34px] border border-white/80 bg-white/60 p-6 shadow-[0_24px_80px_rgba(228,181,197,0.14)] backdrop-blur-xl">
           <div className="flex items-center justify-between">
-            <span className="rounded-full border border-white/80 bg-white/65 px-4 py-2 text-[11px] uppercase tracking-[0.32em] text-charcoal/60">
+            <span className="rounded-full border border-white/80 bg-white/70 px-4 py-2 text-[11px] uppercase tracking-[0.32em] text-charcoal/60">
               Glow Jewels
             </span>
             <span className="text-[11px] uppercase tracking-[0.32em] text-charcoal/45">
@@ -120,64 +126,27 @@ export default function RingExperience() {
             </span>
           </div>
 
-          <div className="mt-10">
-            <p className="text-sm uppercase tracking-[0.28em] text-[#d18ea7]">A message made just for you</p>
-            <h1 className="mt-5 font-serif text-[48px] leading-[0.95] text-charcoal">
+          <div className="py-20 text-center">
+            <p className="text-xs uppercase tracking-[0.34em] text-[#d18ea7]">A voice for you</p>
+            <h1 className="mt-6 font-serif text-[56px] leading-[0.9] text-charcoal">
               {title}
             </h1>
-            <p className="mt-6 text-base leading-7 text-charcoal/70">
-              May this little ring hold a voice you can return to whenever you want warmth, closeness, and one soft moment that feels yours.
+            <p className="mt-6 text-base text-charcoal/62">
+              Keep this close.
             </p>
           </div>
 
-          <div className="mt-10 rounded-[28px] border border-white/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.76),rgba(250,232,239,0.88))] p-5">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <p className="text-xs uppercase tracking-[0.26em] text-charcoal/45">Audio keepsake</p>
-                <p className="mt-2 text-lg font-medium">{experience.audioName}</p>
-              </div>
-              <button
-                type="button"
-                onClick={playAudio}
-                className="rounded-full bg-charcoal px-5 py-3 text-xs uppercase tracking-[0.26em] text-white"
-              >
-                {playing ? "Replay" : "Play"}
-              </button>
-            </div>
-
-            <div className="mt-5 h-2 overflow-hidden rounded-full bg-white/70">
-              <div className={`h-full rounded-full bg-[#e4a8bc] transition-all duration-500 ${playing ? "w-full animate-pulse" : "w-1/3"}`} />
-            </div>
-
-            <p className="mt-4 text-sm leading-6 text-charcoal/60">
-              The audio loops with a small 3-second pause between plays.
-            </p>
-          </div>
-        </div>
-
-        <div className="mt-6 rounded-[28px] border border-white/80 bg-white/48 px-5 py-4 text-center text-sm text-charcoal/58 shadow-[0_16px_44px_rgba(228,181,197,0.12)] backdrop-blur-xl">
-          Keep this page nearby. A gentle tap from the ring brings you back here.
-        </div>
-      </div>
-
-      {needsInteraction && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-[#2a1f24]/40 px-6 backdrop-blur-sm">
-          <div className="max-w-sm rounded-[30px] border border-white/80 bg-white/92 p-7 text-center shadow-[0_30px_80px_rgba(34,20,28,0.18)]">
-            <p className="text-xs uppercase tracking-[0.3em] text-charcoal/40">Tap to begin</p>
-            <h2 className="mt-4 font-serif text-4xl text-charcoal">Your audio is ready</h2>
-            <p className="mt-4 text-sm leading-6 text-charcoal/65">
-              Some mobile browsers block autoplay at first load. Tap once and we’ll start the audio loop.
-            </p>
+          <div className="flex items-center justify-center">
             <button
               type="button"
               onClick={playAudio}
-              className="mt-6 w-full rounded-full bg-charcoal py-3 text-xs uppercase tracking-[0.28em] text-white"
+              className="rounded-full border border-white/80 bg-white/78 px-6 py-3 text-xs uppercase tracking-[0.3em] text-charcoal/75 shadow-[0_10px_30px_rgba(228,181,197,0.14)]"
             >
-              Start Audio
+              {playing ? "Replay Audio" : "Play Audio"}
             </button>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
