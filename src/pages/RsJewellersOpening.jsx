@@ -2,8 +2,11 @@ import { useEffect, useRef } from "react";
 import "../styles/rsJewellersOpening.css";
 
 const PHONE = "9814420941";
+const CONTACT_NAME = "Harsidak Singh";
 const PHONE_LINK = `tel:+91${PHONE}`;
 const WHATSAPP_LINK = `https://wa.me/91${PHONE}?text=${encodeURIComponent("Hello, I'd like to enquire about RS Jewellers grand opening.")}`;
+const INSTAGRAM_HANDLE = "rs.jewelcraft";
+const INSTAGRAM_LINK = `https://www.instagram.com/${INSTAGRAM_HANDLE}/`;
 const MAPS_LINK =
   "https://www.google.com/maps/search/?api=1&query=RS+Jewellers+Main+Hambran+Road+Ludhiana+Opposite+Ram+Sharnam";
 
@@ -133,6 +136,37 @@ function scrollToSection(id) {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 }
 
+function InstagramIcon({ className = "h-4 w-4" }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={className}>
+      <rect x="2" y="2" width="20" height="20" rx="5" />
+      <circle cx="12" cy="12" r="4.5" />
+      <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+function ContactActions({ reveal = false, showInstagram = true, className = "" }) {
+  const revealClass = reveal ? "rs-reveal rs-reveal-delay-4" : "";
+
+  return (
+    <div className={`flex flex-col items-center justify-center gap-3 sm:flex-row sm:flex-wrap ${revealClass} ${className}`}>
+      <a href={PHONE_LINK} className="rs-btn">
+        Call Us
+      </a>
+      <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="rs-btn rs-btn-filled">
+        WhatsApp
+      </a>
+      {showInstagram && (
+        <a href={INSTAGRAM_LINK} target="_blank" rel="noopener noreferrer" className="rs-btn rs-btn-instagram">
+          <InstagramIcon />
+          Follow on Instagram
+        </a>
+      )}
+    </div>
+  );
+}
+
 export default function RsJewellersOpening() {
   const pageRef = useScrollReveal();
   usePageMeta();
@@ -219,6 +253,38 @@ export default function RsJewellersOpening() {
           <p className="rs-serif rs-reveal rs-reveal-delay-4 mt-10 text-xl tracking-[0.1em] text-[#dfc88a] sm:text-2xl">
             11 October 2026
           </p>
+        </div>
+      </section>
+
+      {/* Early Contact */}
+      <section id="connect" className="rs-section border-y border-[#c9a962]/10 bg-[#0d0d0d] py-12 md:py-16">
+        <div className="mx-auto max-w-xl text-center">
+          <p className="rs-reveal text-[0.65rem] font-medium uppercase tracking-[0.35em] text-[#c9a962]/70">
+            Connect With Us
+          </p>
+
+          <p className="rs-serif rs-reveal rs-reveal-delay-1 mt-4 text-2xl font-medium tracking-wide text-[#f5f0e8] sm:text-3xl">
+            {CONTACT_NAME}
+          </p>
+
+          <a
+            href={PHONE_LINK}
+            className="rs-reveal rs-reveal-delay-2 mt-3 inline-block text-xl font-light tracking-[0.08em] text-[#dfc88a] transition-colors hover:text-[#c9a962] sm:text-2xl"
+          >
+            {PHONE}
+          </a>
+
+          <a
+            href={INSTAGRAM_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rs-reveal rs-reveal-delay-3 mt-4 inline-flex items-center gap-2 text-sm font-light text-[#f5f0e8]/50 transition-colors hover:text-[#c9a962]"
+          >
+            <InstagramIcon className="h-4 w-4" />
+            @{INSTAGRAM_HANDLE}
+          </a>
+
+          <ContactActions reveal className="mt-8" />
         </div>
       </section>
 
@@ -318,7 +384,7 @@ export default function RsJewellersOpening() {
           <div className="rs-gold-line rs-reveal rs-reveal-delay-1 mx-auto mb-10 w-16" />
 
           <p className="rs-reveal rs-reveal-delay-2 rs-serif text-xl font-medium tracking-wide text-[#f5f0e8] sm:text-2xl">
-            Harsidak Singh
+            {CONTACT_NAME}
           </p>
 
           <a
@@ -328,14 +394,17 @@ export default function RsJewellersOpening() {
             {PHONE}
           </a>
 
-          <div className="rs-reveal rs-reveal-delay-4 mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <a href={PHONE_LINK} className="rs-btn">
-              Call Us
-            </a>
-            <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="rs-btn rs-btn-filled">
-              WhatsApp
-            </a>
-          </div>
+          <a
+            href={INSTAGRAM_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rs-reveal rs-reveal-delay-3 mt-4 inline-flex items-center gap-2 text-sm font-light text-[#f5f0e8]/50 transition-colors hover:text-[#c9a962]"
+          >
+            <InstagramIcon className="h-4 w-4" />
+            @{INSTAGRAM_HANDLE}
+          </a>
+
+          <ContactActions reveal className="mt-10" />
         </div>
       </section>
 
@@ -366,12 +435,16 @@ export default function RsJewellersOpening() {
             &ldquo;A new destination for fine jewellery in Ludhiana.&rdquo;
           </p>
 
-          <div className="rs-reveal rs-reveal-delay-4 mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <div className="rs-reveal rs-reveal-delay-4 mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row sm:flex-wrap">
             <a href={PHONE_LINK} className="rs-btn rs-btn-filled">
               Call Us
             </a>
             <a href={MAPS_LINK} target="_blank" rel="noopener noreferrer" className="rs-btn">
               Get Directions
+            </a>
+            <a href={INSTAGRAM_LINK} target="_blank" rel="noopener noreferrer" className="rs-btn rs-btn-instagram">
+              <InstagramIcon />
+              Follow on Instagram
             </a>
           </div>
         </div>
@@ -386,6 +459,15 @@ export default function RsJewellersOpening() {
         <p className="mt-4 text-xs font-light text-[#f5f0e8]/35">
           Hambran Road, Ludhiana | Opp. Ram Sharnam
         </p>
+        <a
+          href={INSTAGRAM_LINK}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-4 inline-flex items-center gap-2 text-xs font-light text-[#f5f0e8]/40 transition-colors hover:text-[#c9a962]"
+        >
+          <InstagramIcon className="h-3.5 w-3.5" />
+          @{INSTAGRAM_HANDLE}
+        </a>
         <p className="mt-6 text-[0.6rem] font-light tracking-wide text-[#f5f0e8]/25">
           &copy; 2026 RS Jewellers. All Rights Reserved.
         </p>

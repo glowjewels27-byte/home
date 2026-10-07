@@ -145,6 +145,16 @@
   background: linear-gradient(135deg, rgba(201, 169, 98, 0.35), rgba(201, 169, 98, 0.15));
 }
 
+.rs-btn-instagram {
+  border-color: rgba(201, 169, 98, 0.25);
+  background: linear-gradient(135deg, rgba(201, 169, 98, 0.08), rgba(10, 10, 10, 0.4));
+}
+
+.rs-btn-instagram:hover {
+  border-color: var(--rs-gold);
+  box-shadow: 0 0 24px rgba(201, 169, 98, 0.12);
+}
+
 /* Cards */
 .rs-card {
   background: linear-gradient(145deg, rgba(20, 20, 20, 0.9), rgba(10, 10, 10, 0.95));
