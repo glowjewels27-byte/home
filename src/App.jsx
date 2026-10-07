@@ -16,15 +16,18 @@ import Footer from "./components/Footer.jsx";
 import ScrollToTop from "./components/ScrollToTop.jsx";
 import { Analytics } from "@vercel/analytics/react";
 import RingExperience from "./pages/RingExperience.jsx";
+import RsJewellersOpening from "./pages/RsJewellersOpening.jsx";
 
 export default function App() {
   const location = useLocation();
-  const isRingPage = location.pathname.startsWith("/ring/");
+  const isStandalonePage =
+    location.pathname.startsWith("/ring/") ||
+    location.pathname.startsWith("/rs-jewellers");
 
   return (
     <div className="min-h-screen font-sans">
       <ScrollToTop />
-      {!isRingPage && <Navbar />}
+      {!isStandalonePage && <Navbar />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/shop" element={<Shop />} />
@@ -39,8 +42,9 @@ export default function App() {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/ring/:slug" element={<RingExperience />} />
+        <Route path="/rs-jewellers-opening" element={<RsJewellersOpening />} />
       </Routes>
-      {!isRingPage && <Footer />}
+      {!isStandalonePage && <Footer />}
       <Analytics />
     </div>
   );
